@@ -23,7 +23,7 @@ function Product(name, path){//define constructor instead of object literal
   this.views = 0;
   allProducts.push(this);  //every product object add to a array this means an object
   chartData.labels.push(name);
-  chartData.datasets[0].data.push(0);
+  // chartData.datasets[0].data.push(0);
 }
 function buildAlbum(){//short way instead of call 14 object seperately
   for (var i = 0; i < productNames.length; i++) {
@@ -75,9 +75,7 @@ buildAlbum();//call the function
         }
     },
     showChart: function() {
-      // var productTally=[];
       for (var i = 0; i < allProducts.length; i++) {
-        // productTally.push(allProducts[i].tally);
         chartData.datasets[0].data[i] =  allProducts[i].tally;
       }
       new Chart(this.ctx).Bar(chartData);
