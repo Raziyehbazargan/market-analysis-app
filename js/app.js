@@ -9,10 +9,10 @@ var chartData = {
   datasets:[
     {
   label:"ImagesVote",
-  fillColor: "rgba(220,220,220,0.5)",
-  strokeColor: "rgba(220,220,220,0.8)",
-  highlightFill: "rgba(220,220,220,0.75)",
-  highlightStroke: "rgba(220,220,220,1)",
+  fillColor: "rgba(210,30,20,0.5)",
+  strokeColor: "rgba(120,20,120,0.8)",
+  highlightFill: "rgba(20,210,220,0.75)",
+  highlightStroke: "rgba(240,223,220,1)",
   data:[]
   }
 ]};
