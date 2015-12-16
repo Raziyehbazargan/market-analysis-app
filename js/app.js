@@ -6,7 +6,7 @@ var productNames = ['bag','banana','boots','chair','cthulhu','dragon','pen','sci
 
 var chartData = {
   labels:[],
-  dataset:[
+  datasets:[
     {
   label:"ImagesVote",
   fillColor: "rgba(220,220,220,0.5)",
@@ -23,7 +23,7 @@ function Product(name, path){//define constructor instead of object literal
   this.views = 0;
   allProducts.push(this);  //every product object add to a array this means an object
   chartData.labels.push(name);
-  chartData.dataset[0].data.push(0);
+  chartData.datasets[0].data.push(0);
 }
 function buildAlbum(){//short way instead of call 14 object seperately
   for (var i = 0; i < productNames.length; i++) {
@@ -78,7 +78,7 @@ buildAlbum();//call the function
       // var productTally=[];
       for (var i = 0; i < allProducts.length; i++) {
         // productTally.push(allProducts[i].tally);
-        chartData.dataset[0].data[i] =  allProducts[i].tally;
+        chartData.datasets[0].data[i] =  allProducts[i].tally;
       }
       new Chart(this.ctx).Bar(chartData);
     }
