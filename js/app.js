@@ -1,5 +1,7 @@
 
+
 var allProducts=[];
+var resultTable = document.getElementById('listOfProducts');
 var productNames = ['bag','banana','boots','chair','cthulhu','dragon','pen','scissors','shark','unicorn','water_can','wine_glass']
 
 //define constructor instead of object literal
@@ -8,10 +10,10 @@ function Product(name, path){
   this.path = path;
   this.tally = 0;
   this.views = 0;
-  this.TotalVotes = 0;
   allProducts.push(this);  //every product object add to a array this means an object
+  // data.labels.push(name);
+  // data.dataset[0].push(name);
 }
-
 
 //short way instead of call 14 object seperately
 function buildAlbum(){
@@ -19,6 +21,7 @@ function buildAlbum(){
     new Product(productNames[i], 'img/' + productNames[i] + '.jpg');
   }
 }
+
 
 //call the function
 buildAlbum();
@@ -29,11 +32,14 @@ buildAlbum();
   leftObj:null,
   midObj:null,
   rightObj:null,
+  resultTable : document.getElementById('ListOFProducts'),
 
   leftEl: document.getElementById('imgOne'),
   middleEl: document.getElementById('imgTwo'),
   rightEl: document.getElementById('imgThree'),
-
+  // barcharts:nul;,
+  // buttonClick: document.getElementById('button');
+  // ctx:document.getElementById('mychart').getContext("2d");;
 
   getRandomIndex: function() {
       return Math.floor(Math.random() * productNames.length)
@@ -60,34 +66,31 @@ buildAlbum();
 
     showResults: function() {
         if(this.totalVotes%15 === 0){
+          //showbutton();
           document.getElementById('button').hidden = false;
-          // document.getElementById('results').hidden = false;
+          resultTable.hidden = false;
         }
         else {
           document.getElementById('button').hidden = true;
+          // resultTable.hidden = true;
+          removeTable();
         }
     },
   };
 
 
 productRank.leftEl.addEventListener('click',function(){
-  // document.getElementById('results').hidden = true;
-  deleteList();
+
   console.log('This is the old number:'+ productRank.leftObj.tally);
   // Increment the object's tally property and productRank's total clicks by 1
   productRank.leftObj.tally += 1;
-  productRank.totalVotes+=1;
+  productRank.totalVotes += 1;
   console.log('this id the new number: ' + productRank.midObj.tally);
-  // Call the showResults method to check whether there have been 15 clicks
-  productRank.showResults();
-  // Call the displayImages method to reroll three new images
-  productRank.displayImages();
-
+  productRank.showResults();  // Call the showResults method to check whether there have been 15 clicks
+  productRank.displayImages();  // Call the displayImages method to reroll three new images
 });
 
 productRank.middleEl.addEventListener('click',function(){
-  deleteList();
-  // document.getElementById('results').hidden = true;
   console.log('This is the old number:'+productRank.midObj.tally);
   // Increment the object's tally property and productRank's total clicks by 1
   productRank.midObj.tally += 1;
@@ -100,8 +103,6 @@ productRank.middleEl.addEventListener('click',function(){
 });
 
 productRank.rightEl.addEventListener('click',function(){
-  // document.getElementById('results').hidden = true;
-  deleteList();
   console.log('This is the old number:'+ productRank.rightObj.tally);
   // Increment the object's tally property and productRank's total clicks by 1
   productRank.rightObj.tally += 1;
@@ -113,42 +114,57 @@ productRank.rightEl.addEventListener('click',function(){
   productRank.displayImages();
 });
 
+//call function
 productRank.displayImages();
 
+//a function to create a table for results
+function productTable(){
+  resultTable.style.border="1px solid black";
+  resultTable.hidden = false;
+  var thEl1 = document.createElement('th');
+  var thEl2 = document.createElement('th');
+  var trEl = document.createElement('tr');
 
-
-document.getElementById('button').addEventListener('click',function(){
-    document.getElementById('button').hidden = true;
-    // document.getElementById('results').hidden = false;
-
-    listOfResults = document.getElementById('results');
-    listRow1 = document.createElement('li');
-    listRow1.textContent = productRank.leftObj.name +' the  number is : ' + productRank.leftObj.tally;
-    listOfResults.appendChild(listRow1);
-
-    listRow2 = document.createElement('li');
-    listRow2.textContent = productRank.midObj.name +' the  number is : ' + productRank.midObj.tally;
-    listOfResults.appendChild(listRow2);
-
-    listRow3 = document.createElement('li');
-    listRow3.textContent = productRank.rightObj.name +' the  number is : ' + productRank.rightObj.tally;
-    listOfResults.appendChild(listRow3);
-
+  thEl1.textContent="Products";
+  trEl.appendChild(thEl1);
+  thEl2.textContent="Votes";
+  trEl.appendChild(thEl2);
+  resultTable.appendChild(trEl);
+  for (var i = 0; i < allProducts.length; i++) {
+    var trEl = document.createElement('tr');
+    var tdEl = document.createElement('td');
+    tdEl.textContent = allProducts[i].name;
+    trEl.appendChild(tdEl);
+    var tdEl = document.createElement('td');
+    tdEl.textContent = allProducts[i].tally;
+    trEl.appendChild(tdEl);
+    resultTable.appendChild(trEl);
+  };
+}
+document.getElementById('button').addEventListener('click',function(event){
+  event.preventDefault();
+  productTable();
 });
 
-
-function deleteList(){
-  ulEl = document.getElementById('results');
-
-  while(ulEl.firstChild){
-    ulEl.removeChild(ulEl.firstChild);
-}
+function removeTable() {
+  while (resultTable.firstChild) {
+    resultTable.removeChild(resultTable.firstChild);
+  }
 }
 
 
 
 
-
+// tallyClicks:function(elId){
+//   for (var i in allProducts) {
+//     if(allProducts[i].name===elId){
+//       allProducts[i].tally+=1;
+//       this.totalVotes+=1;
+//
+//
+//     }
+//   }
+// }
 
  // function literal
 // var widget = {
