@@ -4,38 +4,34 @@ var allProducts=[];
 var resultTable = document.getElementById('listOfProducts');
 var productNames = ['bag','banana','boots','chair','cthulhu','dragon','pen','scissors','shark','unicorn','water_can','wine_glass']
 
-var data = {
+var chartData = {
   labels:[],
-  dataset:[{
-    // label:'Images Vote',
-    // fillColor: "rgba(220,220,220,0.5)",
-    // strokeColor: "rgba(220,220,220,0.8)",
-    // highlightFill: "rgba(220,220,220,0.75)",
-    // highlightStroke: "rgba(220,220,220,1)",
-    data: [0, 0, 0, 0, 1, 1, 1]
+  dataset:[
+    {
+  label:"ImagesVote",
+  fillColor: "rgba(220,220,220,0.5)",
+  strokeColor: "rgba(220,220,220,0.8)",
+  highlightFill: "rgba(220,220,220,0.75)",
+  highlightStroke: "rgba(220,220,220,1)",
+  data:[]
   }
-]
-};
-//define constructor instead of object literal
-function Product(name, path){
+]};
+function Product(name, path){//define constructor instead of object literal
   this.name = name;
   this.path = path;
   this.tally = 0;
   this.views = 0;
   allProducts.push(this);  //every product object add to a array this means an object
-  data.labels.push(name);
-  // data.dataset[0].push(tally);
+  chartData.labels.push(name);
+  chartData.dataset[0].data.push(0);
 }
-
-//short way instead of call 14 object seperately
-function buildAlbum(){
+function buildAlbum(){//short way instead of call 14 object seperately
   for (var i = 0; i < productNames.length; i++) {
     new Product(productNames[i], 'img/' + productNames[i] + '.jpg');
   }
 }
-
-
 buildAlbum();//call the function
+// -----------------------------------------------------------------------
 
  var productRank = {
   totalVotes:0,
@@ -43,46 +39,52 @@ buildAlbum();//call the function
   midObj:null,
   rightObj:null,
   resultTable : document.getElementById('ListOFProducts'),
-
   leftEl: document.getElementById('imgOne'),
   middleEl: document.getElementById('imgTwo'),
   rightEl: document.getElementById('imgThree'),
-  barcharts:null,
-  ctx:document.getElementById('chart').getContext("2d"),
-
+  ctx:document.getElementById('chart').getContext('2d'),
   getRandomIndex: function() {
       return Math.floor(Math.random() * productNames.length)
     },
   displayImages: function() {
-    this.leftObj = allProducts[productRank.getRandomIndex()];
-    this.rightObj = allProducts[productRank.getRandomIndex()];
-    this.midObj = allProducts[productRank.getRandomIndex()];
+  this.leftObj = allProducts[productRank.getRandomIndex()];
+  this.rightObj = allProducts[productRank.getRandomIndex()];
+  this.midObj = allProducts[productRank.getRandomIndex()];
 
-    if(productRank.leftObj===productRank.midObj || productRank.leftObj===productRank.rightObj || productRank.midObj===productRank.rightObj) {
-      productRank.displayImages();
+  if(productRank.leftObj===productRank.midObj || productRank.leftObj===productRank.rightObj || productRank.midObj===productRank.rightObj) {
+    productRank.displayImages();
+   }
+   productRank.leftEl.src = productRank.leftObj.path;
+   productRank.leftEl.id = productRank.leftObj.name;
+
+   productRank.middleEl.src = productRank.midObj.path;
+   productRank.middleEl.id = productRank.midObj.name;
+
+   productRank.rightEl.src = productRank.rightObj.path;
+   productRank.rightEl.id = productRank.rightObj.name;
+  },
+
+  showResults: function() {
+    if(this.totalVotes%15 === 0){
+      document.getElementById('button').hidden = false;
+      resultTable.hidden = false;
+      }
+    else {
+      document.getElementById('button').hidden = true;
+      removeTable();
+        }
+    },
+    showChart: function() {
+      // var productTally=[];
+      for (var i = 0; i < allProducts.length; i++) {
+        // productTally.push(allProducts[i].tally);
+        chartData.dataset[0].data[i] =  allProducts[i].tally;
+      }
+      new Chart(this.ctx).Bar(chartData);
     }
-    productRank.leftEl.src = productRank.leftObj.path;
-    productRank.leftEl.id = productRank.leftObj.name;
-
-    productRank.middleEl.src = productRank.midObj.path;
-    productRank.middleEl.id = productRank.midObj.name;
-
-    productRank.rightEl.src = productRank.rightObj.path;
-    productRank.rightEl.id = productRank.rightObj.name;
-    },
-
-    showResults: function() {
-        if(this.totalVotes%15 === 0){
-          document.getElementById('button').hidden = false;
-          resultTable.hidden = false;
-        }
-        else {
-          document.getElementById('button').hidden = true;
-          removeTable();
-        }
-    },
   };
 
+// -----------------------------------------------------------------------
 
 productRank.leftEl.addEventListener('click',function(){
   console.log('This is the old number:'+ productRank.leftObj.tally);
@@ -97,7 +99,7 @@ productRank.middleEl.addEventListener('click',function(){
   console.log('This is the old number:'+productRank.midObj.tally);
   // Increment the object's tally property and productRank's total clicks by 1
   productRank.midObj.tally += 1;
-  productRank.totalVotes+=1;
+  productRank.totalVotes += 1;
   console.log('this id the new number: ' +productRank.midObj.tally);
   // Call the showResults method to check whether there have been 15 clicks
   productRank.showResults();
@@ -114,9 +116,8 @@ productRank.rightEl.addEventListener('click',function(){
   productRank.showResults();
   productRank.displayImages();  // Call the displayImages method to reroll three new images
 });
-
 productRank.displayImages();
-
+// -------------------------------------------------------------------------
 //a function to create a table for results
 function productTable(){
   resultTable.style.border="1px solid black";
@@ -142,12 +143,15 @@ function productTable(){
   };
 }
 function removeTable() {
-  while (resultTable.firstChild) {
+while (resultTable.firstChild) {
     resultTable.removeChild(resultTable.firstChild);
   }
 }
+// -------------------------------------------------------------------------
+
 document.getElementById('button').addEventListener('click',function(event){
   event.preventDefault();
-  productTable();
-  // productRank.barcharts = new chart(ctx).Bar(data);
+  productRank.showChart();
 });
+// productTable();
+// productRank.barcharts = new Chart(productRank.ctx).Bar(data)});
