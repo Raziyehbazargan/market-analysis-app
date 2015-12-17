@@ -74,13 +74,27 @@ buildAlbum();//call the function
       removeTable();
         }
     },
-    showChart: function() {
-      for (var i = 0; i < allProducts.length; i++) {
+  showChart: function() {
+    var newJsonValue=[];
+      if(localStorage.productVotes){
+        var jsonValue = localStorage.getItem('productVotes');
+        var returnJson = JSON.parse(jsonValue);
+        for (var i = 0; i < returnJson.length; i++){
+        newJsonValue[i] = returnJson[i] + allProducts[i].tally;
+        chartData.datasets[0].data[i] =  newJsonValue[i];
+        localStorage.setItem('productVotes', JSON.stringify(newJsonValue));
+        }
+      }else {
+        var jsonData=[];
+        for (var i = 0; i < allProducts.length; i++){
         chartData.datasets[0].data[i] =  allProducts[i].tally;
+        jsonData[i] =  allProducts[i].tally;
       }
-      new Chart(this.ctx).Bar(chartData);
+        localStorage.setItem('productVotes', JSON.stringify(jsonData));
+      }
+        new Chart(this.ctx).Bar(chartData);
     }
-  };
+};
 
 // -----------------------------------------------------------------------
 
@@ -117,39 +131,40 @@ productRank.rightEl.addEventListener('click',function(){
 productRank.displayImages();
 // -------------------------------------------------------------------------
 //a function to create a table for results
-// function productTable(){
-//   resultTable.style.border="1px solid black";
-//   resultTable.hidden = false;
-//   var thEl1 = document.createElement('th');
-//   var thEl2 = document.createElement('th');
-//   var trEl = document.createElement('tr');
-//
-//   thEl1.textContent="Products";
-//   trEl.appendChild(thEl1);
-//   thEl2.textContent="Votes";
-//   trEl.appendChild(thEl2);
-//   resultTable.appendChild(trEl);
-//   for (var i = 0; i < allProducts.length; i++) {
-//     var trEl = document.createElement('tr');
-//     var tdEl = document.createElement('td');
-//     tdEl.textContent = allProducts[i].name;
-//     trEl.appendChild(tdEl);
-//     var tdEl = document.createElement('td');
-//     tdEl.textContent = allProducts[i].tally;
-//     trEl.appendChild(tdEl);
-//     resultTable.appendChild(trEl);
-//   };
-// }
-// function removeTable() {
-// while (resultTable.firstChild) {
-//     resultTable.removeChild(resultTable.firstChild);
-//   }
-// }
+function productTable(){
+  resultTable.style.border="1px solid black";
+  resultTable.hidden = false;
+  var thEl1 = document.createElement('th');
+  var thEl2 = document.createElement('th');
+  var trEl = document.createElement('tr');
+
+  thEl1.textContent="Products";
+  trEl.appendChild(thEl1);
+  thEl2.textContent="Votes";
+  trEl.appendChild(thEl2);
+  resultTable.appendChild(trEl);
+  for (var i = 0; i < allProducts.length; i++) {
+    var trEl = document.createElement('tr');
+    var tdEl = document.createElement('td');
+    tdEl.textContent = allProducts[i].name;
+    trEl.appendChild(tdEl);
+    var tdEl = document.createElement('td');
+    tdEl.textContent = allProducts[i].tally;
+    trEl.appendChild(tdEl);
+    resultTable.appendChild(trEl);
+  };
+}
+function removeTable() {
+while (resultTable.firstChild) {
+    resultTable.removeChild(resultTable.firstChild);
+  }
+}
 // -------------------------------------------------------------------------
 
 document.getElementById('button').addEventListener('click',function(event){
   event.preventDefault();
   productRank.showChart();
+  // productRank.votelocalStorage();
 });
 // productTable();
 // productRank.barcharts = new Chart(productRank.ctx).Bar(data)});
