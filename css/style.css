@@ -4,6 +4,7 @@ section img{
   border: 1px solid black;
   width: 250px;
   height: 250px;
+  box-shadow: 10px 10px 5px #124456;
 }
 
 ul{
