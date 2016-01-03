@@ -77,22 +77,19 @@ buildAlbum();//call the function
   showChart: function() {
     var newJsonValue=[];
       if(localStorage.productVotes){
-        var jsonValue = localStorage.getItem('productVotes');
-        var returnJson = JSON.parse(jsonValue);
+        var returnJson = JSON.parse(localStorage.getItem('productVotes'));
         for (var i = 0; i < returnJson.length; i++){
         newJsonValue[i] = returnJson[i] + allProducts[i].tally;
         chartData.datasets[0].data[i] =  newJsonValue[i];
         localStorage.setItem('productVotes', JSON.stringify(newJsonValue));
         }
       }else {
-        var jsonData=[];
         for (var i = 0; i < allProducts.length; i++){
         chartData.datasets[0].data[i] =  allProducts[i].tally;
-        jsonData[i] =  allProducts[i].tally;
       }
-        localStorage.setItem('productVotes', JSON.stringify(jsonData));
-      }
-        new Chart(this.ctx).Bar(chartData);
+      localStorage.setItem('productVotes', JSON.stringify(chartData.datasets[0].data));
+    }
+    new Chart(this.ctx).Bar(chartData);
     }
 };
 
